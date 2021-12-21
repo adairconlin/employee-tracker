@@ -5,13 +5,12 @@
     "mysql2": "^2.3.3"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node main.js"
   },
   "name": "employee-tracker",
   "description": "",
   "version": "1.0.0",
-  "main": "index.js",
-  "devDependencies": {},
+  "main": "main.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adairconlin/employee-tracker.git"
