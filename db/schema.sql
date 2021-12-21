@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS employee_tracker;
 CREATE DATABASE IF NOT EXISTS employee_tracker;
 USE employee_tracker;
 
@@ -7,7 +8,7 @@ DROP TABLE IF EXISTS department;
 
 CREATE TABLE department (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(30) NOT NULL,
+    name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE role (

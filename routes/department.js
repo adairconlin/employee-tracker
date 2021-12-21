@@ -5,7 +5,9 @@ getDepartments = () => {
     const sql = `SELECT * FROM department`;
     db.query(sql, (err, result) => {
         if(err) throw err;
+        console.log("All Departments:")
         console.log(result);
+        console.table(result);
     });
 };
 
@@ -13,15 +15,19 @@ getDepartments = () => {
 addDepartment = (name) => {
     const sql = `INSERT INTO department (name) VALUES (?)`;
     const params  = [name];
-    db.query(sql, params, (err, result) => {
+    db.query(sql, params, (err, rows) => {
         if(err) throw err;
-        console.log(result);
+        console.log("Department has been added!");
     });
 };
 
 //Delete a department from database
-deleteDepartment = (name) => {
-
+deleteDepartment = (id) => {
+    const sql = `DELETE FROM department WHERE id = ?`;
+    db.query(sql, id, (err, result) => {
+        if(err) throw err;
+        console.log("Department has been deleted!");
+    })
 }
 
 module.exports = { getDepartments, addDepartment, deleteDepartment };

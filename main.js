@@ -81,6 +81,7 @@ promptDepartments = data => {
         case "View all departments":
             getDepartments();
             break;
+
         case "Add a department":
             return inquirer.prompt([
                 {
@@ -99,58 +100,97 @@ promptDepartments = data => {
             ])
             .then((response) => {
                 addDepartment(response.name);
-            });
+            })
+
         case "Delete a department":
             return inquirer.prompt([
                 {
                     type: "input",
-                    name: "name",
-                    message: "What department would you like to delete?",
+                    name: "id",
+                    message: "Provide the id of the department you want to delete:",
                     validate: response => {
                         if(response) {
                             return true;
                         } else {
-                            console.log("Please provide the name of the department you would like to delete");
+                            console.log("Please provide the id of the department you would like to delete");
                             return false;
                         }
                     }
                 }
             ])
             .then((response) => {
-                deleteDepartment(response.name);
-            });
+                deleteDepartment(response.id);
+            })
     }
-    // if(data.command === "View all departments") {
-    //     getDepartments();
-    // } else if(data.command === "Add a department") {
-    //     return inquirer.prompt([
-    //         {
-    //             type: "input",
-    //             name: "name",
-    //             message: "What department would you like to add?",
-    //             validate: response => {
-    //                 if(response) {
-    //                     return true;
-    //                 } else {
-    //                     console.log("Please provide the name of the department you would like to add");
-    //                     return false;
-    //                 }
-    //             }
-    //         }
-    //     ])
-    //     .then((response) => {
-    //         addDepartment(response.name);
-    //     })
-    // }
 };
 
 promptRoles = data => {
-    console.log(data.command);
+    switch(data.command) {
+        case "View all roles":
+            getRoles();
+            break;
+
+        case "Add a role":
+            return inquirer.prompt([
+                {
+                    type: "input",
+                    name: "name",
+                    message: "What role would you like to add?",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide the name of the role you would like to add.");
+                            return false;
+                        }
+                    }
+                }
+            ])
+            .then((response) => {
+                addRole(response.name);
+            })
+
+        case "Delete a role":
+            return inquirer.prompt([
+                {
+                    type: "input",
+                    name: "id",
+                    message: "Provide the id of the role you want to delete:",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide the id of the role you would like to delete.");
+                            return false;
+                        }
+                    }
+                }
+            ])
+            .then((response) => {
+                deleteRole(response.id);
+            })
+    }
 };
 
 promptEmployees = data => {
     console.log(data.command);
 };
+
+promptToExit = async () => {
+    const response = await inquirer.prompt([
+        {
+            type: "confirm",
+            name: "continue",
+            message: "Would you like to continue?"
+        }
+    ]);
+    console.log(response);
+    if (response) {
+        introPrompt();
+    } else {
+        prompt.ui.close();
+    }
+}
 
 introPrompt()
     .then(response => {
