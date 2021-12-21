@@ -2,6 +2,7 @@ const db = require("./db/connection");
 const inquirer = require("inquirer");
 const { getDepartments, addDepartment, deleteDepartment } = require("./routes/department");
 const { getRoles, addRole, deleteRole } = require("./routes/role");
+const { getEmployees, addEmployee, deleteEmployee } = require("./routes/employee");
 
 //Sql server connection response
 db.connect(err => {
@@ -77,6 +78,7 @@ const introPrompt = () => {
     })
 };
 
+//Department user action prompts
 promptDepartments = data => {
     switch(data.command) {
         case "View all departments":
@@ -125,6 +127,7 @@ promptDepartments = data => {
     }
 };
 
+//Role user action prompts
 promptRoles = data => {
     switch(data.command) {
         case "View all roles":
@@ -133,19 +136,6 @@ promptRoles = data => {
 
         case "Add a role":
             return inquirer.prompt([
-                {
-                    type: "number",
-                    name: "id",
-                    message: "Provide a role id:",
-                    validate: response => {
-                        if(response) {
-                            return true;
-                        } else {
-                            console.log("Please provide a role id:");
-                            return false;
-                        }
-                    }
-                },
                 {
                     type: "input",
                     name: "title",
@@ -187,7 +177,7 @@ promptRoles = data => {
                 }
             ])
             .then((response) => {
-                addRole(response.id, response.title, response.salary, response.department_id);
+                addRole(response.title, response.salary, response.department_id);
             })
 
         case "Delete a role":
@@ -212,8 +202,85 @@ promptRoles = data => {
     }
 };
 
+//Employee user action prompts
 promptEmployees = data => {
-    console.log(data.command);
+    switch(data.command) {
+        // VIEW ALL EMPLOYEES
+        case "View all employees":
+            getEmployees();
+            break;
+        // ADD AN EMPLOYEE
+        case "Add an employee":
+            return inquirer.prompt([
+                {
+                    type: "input",
+                    name: "first_name",
+                    message: "What is the first name of this employee?",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide the first name of the employee you want to add.");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: "input",
+                    name: "last_name",
+                    message: "What is the last name of this employee?",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide the last name of the employee you want to add.");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: "number",
+                    name: "role_id",
+                    message: "Please provide a role id for this employee:",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide a role id for this employee.");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: "number",
+                    name: "manager_id",
+                    message: "Please provide a manager id for this employee, if applicable:",
+                }
+            ])
+            .then((response) => {
+                addEmployee(response.first_name, response.last_name, response.role_id, response.manager_id);
+            })
+        // DELETE AN EMPLOYEE
+        case "Delete an employee":
+            return inquirer.prompt([
+                {
+                    type: "input",
+                    name: "id",
+                    message: "Provide the id of the employee you want to delete:",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide the id of the employee you would like to delete.");
+                            return false;
+                        }
+                    }
+                }
+            ])
+            .then((response) => {
+                deleteEmployee(response.id);
+            })
+    }
 };
 
 promptToExit = async () => {

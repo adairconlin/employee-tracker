@@ -9,6 +9,7 @@ getDepartments = () => {
             console.log("There are no current departments.");
         } else {
             console.table(result);
+            process.exit();
         }
     });
 };
@@ -20,6 +21,7 @@ addDepartment = (name) => {
     db.query(sql, params, (err, rows) => {
         if(err) throw err;
         console.log("Department has been added!");
+        process.exit();
     });
 };
 
@@ -29,6 +31,7 @@ deleteDepartment = (id) => {
     db.query(sql, id, (err, result) => {
         if(err) throw err;
         console.log("Department has been deleted!");
+        process.exit();
     })
 }
 

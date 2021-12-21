@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-//Get all departments
+//Get all roles
 getRoles = () => {
     const sql = `SELECT * FROM role`;
     db.query(sql, (err, result) => {
@@ -10,25 +10,28 @@ getRoles = () => {
         } else {
             console.table(result);
         }
+        process.exit();
     });
 };
 
-//Add a deparment to database
-addRole = (id, title, salary, department_id) => {
-    const sql = `INSERT INTO role (id, title, salary, department_id) VALUES (?, ?, ?, ?)`;
-    const params  = [id, title, salary, department_id];
+//Add a role to database
+addRole = (title, salary, department_id) => {
+    const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
+    const params  = [title, salary, department_id];
     db.query(sql, params, (err, rows) => {
         if(err) throw err;
-        console.log("Department has been added!");
+        console.log("Role has been added!");
+        process.exit();
     });
 };
 
-//Delete a department from database
+//Delete a role from database
 deleteRole = (title) => {
     const sql = `DELETE FROM role WHERE title = ?`;
     db.query(sql, title, (err, result) => {
         if(err) throw err;
-        console.log("Department has been deleted!");
+        console.log("Role has been deleted!");
+        process.exit();
     })
 }
 
