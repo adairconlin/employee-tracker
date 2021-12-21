@@ -1,6 +1,7 @@
 const db = require("./db/connection");
 const inquirer = require("inquirer");
 const { getDepartments, addDepartment, deleteDepartment } = require("./routes/department");
+const { getRoles, addRole, deleteRole } = require("./routes/role");
 
 //Sql server connection response
 db.connect(err => {
@@ -133,41 +134,80 @@ promptRoles = data => {
         case "Add a role":
             return inquirer.prompt([
                 {
-                    type: "input",
-                    name: "name",
-                    message: "What role would you like to add?",
+                    type: "number",
+                    name: "id",
+                    message: "Provide a role id:",
                     validate: response => {
                         if(response) {
                             return true;
                         } else {
-                            console.log("Please provide the name of the role you would like to add.");
+                            console.log("Please provide a role id:");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: "input",
+                    name: "title",
+                    message: "What is the title of this role?",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide the title of the role you would like to add.");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: "number",
+                    name: "salary",
+                    message: "What is this roles salary? (Numerical input only)",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide a salary in numbers only.");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: "number",
+                    name: "department_id",
+                    message: "Please provide a department id for this role:",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide a department id for this role.");
                             return false;
                         }
                     }
                 }
             ])
             .then((response) => {
-                addRole(response.name);
+                addRole(response.id, response.title, response.salary, response.department_id);
             })
 
         case "Delete a role":
             return inquirer.prompt([
                 {
                     type: "input",
-                    name: "id",
-                    message: "Provide the id of the role you want to delete:",
+                    name: "title",
+                    message: "Provide the title of the role you want to delete:",
                     validate: response => {
                         if(response) {
                             return true;
                         } else {
-                            console.log("Please provide the id of the role you would like to delete.");
+                            console.log("Please provide the title of the role you would like to delete.");
                             return false;
                         }
                     }
                 }
             ])
             .then((response) => {
-                deleteRole(response.id);
+                deleteRole(response.title);
             })
     }
 };

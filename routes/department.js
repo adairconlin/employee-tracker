@@ -5,9 +5,11 @@ getDepartments = () => {
     const sql = `SELECT * FROM department`;
     db.query(sql, (err, result) => {
         if(err) throw err;
-        console.log("All Departments:")
-        console.log(result);
-        console.table(result);
+        if(result.length === 0) {
+            console.log("There are no current departments.");
+        } else {
+            console.table(result);
+        }
     });
 };
 
