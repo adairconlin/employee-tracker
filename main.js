@@ -206,11 +206,10 @@ promptRoles = data => {
 //Employee user action prompts
 promptEmployees = data => {
     switch(data.command) {
-        // VIEW ALL EMPLOYEES
         case "View all employees":
             getEmployees();
             break;
-        // ADD AN EMPLOYEE
+
         case "Add an employee":
             return inquirer.prompt([
                 {
@@ -261,6 +260,7 @@ promptEmployees = data => {
             .then((response) => {
                 addEmployee(response.first_name, response.last_name, response.role_id, response.manager_id);
             })
+
         case "Update an employee":
             return inquirer.prompt ([
                 {
@@ -296,7 +296,7 @@ promptEmployees = data => {
             .then((response) => {
                 updateEmployee(response.id, response.choice, response.change);
             })
-        // DELETE AN EMPLOYEE
+
         case "Delete an employee":
             return inquirer.prompt([
                 {
