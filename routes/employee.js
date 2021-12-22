@@ -2,7 +2,13 @@ const db = require("../db/connection");
 
 //Get all roles
 getEmployees = () => {
-    const sql = `SELECT * FROM employee`;
+    //Referenced code here https://www.sqlservertutorial.net/sql-server-basics/sql-server-self-join/
+    const sql = `SELECT e.id, e.first_name, e.last_name,
+                 role.title AS current_role, 
+                 m.first_name AS manager_name 
+                 FROM employee e
+                 LEFT JOIN role ON e.role_id = role.id
+                 LEFT JOIN employee m ON m.id = e.manager_id`
     db.query(sql, (err, result) => {
         if(err) throw err;
         if(result.length === 0) {
