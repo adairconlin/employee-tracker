@@ -2,7 +2,9 @@ const db = require("../db/connection");
 
 //Get all roles
 getRoles = () => {
-    const sql = `SELECT * FROM role`;
+    const sql = `SELECT role.title, role.salary, department.name AS department
+                 FROM role
+                 LEFT JOIN department ON role.department_id = department.id`
     db.query(sql, (err, result) => {
         if(err) throw err;
         if(result.length === 0) {
