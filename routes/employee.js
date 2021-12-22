@@ -28,6 +28,17 @@ addEmployee = (first_name, last_name, role_id, manager_id) => {
     });
 };
 
+//Update an employee
+updateEmployee = (id, choice, change) => {
+    const sql = `UPDATE employee SET ${choice} = ? WHERE id = ?`;
+    const params = [change, id];
+    db.query(sql, params, (err, result) => {
+        if(err) throw err;
+        console.log("Employee has been updated!");
+        process.exit();
+    });
+};
+
 //Delete a role from database
 deleteEmployee = (id) => {
     const sql = `DELETE FROM employee WHERE id = ?`;
@@ -38,4 +49,4 @@ deleteEmployee = (id) => {
     })
 }
 
-module.exports = { getEmployees, addEmployee, deleteEmployee };
+module.exports = { getEmployees, addEmployee, updateEmployee, deleteEmployee };

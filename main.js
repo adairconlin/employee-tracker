@@ -2,7 +2,7 @@ const db = require("./db/connection");
 const inquirer = require("inquirer");
 const { getDepartments, addDepartment, deleteDepartment } = require("./routes/department");
 const { getRoles, addRole, deleteRole } = require("./routes/role");
-const { getEmployees, addEmployee, deleteEmployee } = require("./routes/employee");
+const { getEmployees, addEmployee, updateEmployee, deleteEmployee } = require("./routes/employee");
 
 //Sql server connection response
 db.connect(err => {
@@ -62,6 +62,7 @@ const introPrompt = () => {
             choices: [
                 "View all employees",
                 "Add an employee",
+                "Update an employee",
                 "Delete an employee"
             ],
             when: ({category}) => {
@@ -259,6 +260,41 @@ promptEmployees = data => {
             ])
             .then((response) => {
                 addEmployee(response.first_name, response.last_name, response.role_id, response.manager_id);
+            })
+        case "Update an employee":
+            return inquirer.prompt ([
+                {
+                    type: "input",
+                    name: "id",
+                    message: "Provide the id of the employee you want to update:",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide the if of the employee you would like to update.");
+                            return false;
+                        }
+                    }
+                },
+                {
+                    type: "list",
+                    name: "choice",
+                    message: "What would you like to update?",
+                    choices: [
+                        "first_name",
+                        "last_name",
+                        "role_id",
+                        "manager_id"
+                    ]
+                },
+                {
+                    type: "input",
+                    name: "change",
+                    message: "What would you like to change it to?",
+                }
+            ])
+            .then((response) => {
+                updateEmployee(response.id, response.choice, response.change);
             })
         // DELETE AN EMPLOYEE
         case "Delete an employee":
