@@ -4,11 +4,13 @@ const db = require("../db/connection");
 getEmployees = () => {
     //Referenced code here https://www.sqlservertutorial.net/sql-server-basics/sql-server-self-join/
     const sql = `SELECT e.id, e.first_name, e.last_name,
-                 role.title AS current_role, 
+                 role.title AS current_role, role.salary AS currnet_salary,
+                 department.name AS department,
                  m.first_name AS manager_name 
                  FROM employee e
                  LEFT JOIN role ON e.role_id = role.id
-                 LEFT JOIN employee m ON m.id = e.manager_id`
+                 LEFT JOIN department ON role.department_id = department.id
+                 LEFT JOIN employee m ON m.id = e.manager_id`;
     db.query(sql, (err, result) => {
         if(err) throw err;
         if(result.length === 0) {
@@ -55,4 +57,48 @@ deleteEmployee = (id) => {
     })
 }
 
-module.exports = { getEmployees, addEmployee, updateEmployee, deleteEmployee };
+viewEmployeesByManager = (manager_id) => {
+    const sql = `SELECT e.id, e.first_name, e.last_name,
+                 role.title AS current_role, role.salary AS currnet_salary,
+                 department.name AS department,
+                 m.first_name AS manager_name 
+                 FROM employee e
+                 JOIN role ON e.role_id = role.id
+                 JOIN department ON role.department_id = department.id
+                 JOIN employee m ON m.id = e.manager_id
+                 WHERE e.manager_id = ?`;
+    const params = [manager_id];
+    db.query(sql, params, (err, result) => {
+        if(err) throw err;
+        if(result.length === 0) {
+            console.log("There are no employees under this manager.")
+        } else {
+            console.table(result);
+        }
+        process.exit();
+    })
+}
+
+viewEmployeesByDepartment = (id) => {
+    const sql = `SELECT e.id, e.first_name, e.last_name,
+                 role.title AS current_role, role.salary AS currnet_salary,
+                 department.name AS department,
+                 m.first_name AS manager_name 
+                 FROM employee e
+                 JOIN role ON e.role_id = role.id
+                 JOIN department ON role.department_id = department.id
+                 JOIN employee m ON m.id = e.manager_id
+                 WHERE department.id = ?`;
+    const params = [id];
+    db.query(sql, params, (err, result) => {
+        if(err) throw err;
+        if(result.length === 0 ) {
+            console.log("There are no employees in this department");
+        } else {
+            console.table(result);
+        }
+        process.exit();
+    })
+}
+
+module.exports = { getEmployees, addEmployee, updateEmployee, deleteEmployee, viewEmployeesByManager, viewEmployeesByDepartment };

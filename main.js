@@ -2,7 +2,7 @@ const db = require("./db/connection");
 const inquirer = require("inquirer");
 const { getDepartments, addDepartment, deleteDepartment } = require("./routes/department");
 const { getRoles, addRole, deleteRole } = require("./routes/role");
-const { getEmployees, addEmployee, updateEmployee, deleteEmployee } = require("./routes/employee");
+const { getEmployees, addEmployee, updateEmployee, deleteEmployee, viewEmployeesByManager, viewEmployeesByDepartment } = require("./routes/employee");
 
 //Sql server connection response
 db.connect(err => {
@@ -61,6 +61,8 @@ const introPrompt = () => {
             message: "What would you like to do?",
             choices: [
                 "View all employees",
+                "View employees by manager",
+                "View employees by department",
                 "Add an employee",
                 "Update an employee",
                 "Delete an employee"
@@ -210,6 +212,46 @@ promptEmployees = data => {
             getEmployees();
             break;
 
+        case "View employees by manager":
+            return inquirer.prompt([
+                {
+                    type: "number",
+                    name: "manager_id",
+                    message: "Please provide a manager id to view their employees:",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide a manager's id.");
+                            return false;
+                        }
+                    }
+                }
+            ])
+            .then(response => {
+                viewEmployeesByManager(response.manager_id);
+            });
+        
+        case "View employees by department":
+            return inquirer.prompt([
+                {
+                    type: "number",
+                    name: "id",
+                    message: "Please provide a department id to view the corresponding employees:",
+                    validate: response => {
+                        if(response) {
+                            return true;
+                        } else {
+                            console.log("Please provide a department id.");
+                            return false;
+                        }
+                    }
+                }
+            ])
+            .then(response => {
+                viewEmployeesByDepartment(response.id);
+            });
+
         case "Add an employee":
             return inquirer.prompt([
                 {
@@ -322,7 +364,7 @@ promptEmployees = data => {
 introPrompt()
     .then(response => {
         if(response.category === "Departments") {
-            promptDepartments(response);
+            promptDepartments(response)
         } else if(response.category === "Roles") {
             promptRoles(response);
         } else if(response.category === "Employees") {

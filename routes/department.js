@@ -7,6 +7,7 @@ getDepartments = () => {
         if(err) throw err;
         if(result.length === 0) {
             console.log("There are no current departments.");
+            process.exit();
         } else {
             console.table(result);
             process.exit();
