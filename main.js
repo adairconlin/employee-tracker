@@ -319,22 +319,6 @@ promptEmployees = data => {
     }
 };
 
-promptToExit = async () => {
-    const response = await inquirer.prompt([
-        {
-            type: "confirm",
-            name: "continue",
-            message: "Would you like to continue?"
-        }
-    ]);
-    console.log(response);
-    if (response) {
-        introPrompt();
-    } else {
-        prompt.ui.close();
-    }
-}
-
 introPrompt()
     .then(response => {
         if(response.category === "Departments") {
